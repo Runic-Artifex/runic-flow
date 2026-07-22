@@ -10,6 +10,7 @@ namespace WebUIToolkit.MVVM.Flow;
 /// </summary>
 internal sealed class FlowContentSession : IAsyncDisposable
 {
+    private static readonly object HierarchyGate = new();
     private readonly object _gate = new();
     private readonly object _ownedScope;
     private readonly bool _ownsViewModel;
@@ -17,8 +18,8 @@ internal sealed class FlowContentSession : IAsyncDisposable
     private readonly List<FlowContentSession> _children = [];
     private readonly Lazy<Task> _disposeOperation;
     private IFlowPresentationLease? _presenterLease;
+    private FlowContentSession? _parent;
     private bool _teardownStarted;
-    private int _hasParent;
 
     /// <summary>
     /// Initializes a content session. The scope is always owned and is disposed last.
@@ -81,19 +82,24 @@ internal sealed class FlowContentSession : IAsyncDisposable
             throw new ArgumentException("A content session cannot own itself.", nameof(child));
         }
 
-        lock (_gate)
+        lock (HierarchyGate)
         {
-            ThrowIfTeardownStarted();
-            child.ClaimParent();
+            EnsureAcyclicChild(child);
 
-            try
+            lock (_gate)
             {
-                _children.Add(child);
-            }
-            catch
-            {
-                child.ReleaseParentClaim();
-                throw;
+                ThrowIfTeardownStarted();
+                child.ClaimParent(this);
+
+                try
+                {
+                    _children.Add(child);
+                }
+                catch
+                {
+                    child.ReleaseParentClaim(this);
+                    throw;
+                }
             }
         }
     }
@@ -125,13 +131,16 @@ internal sealed class FlowContentSession : IAsyncDisposable
         FlowContentSession[] children;
         IFlowPresentationLease? lease;
 
-        lock (_gate)
+        lock (HierarchyGate)
         {
-            _teardownStarted = true;
-            children = _children.ToArray();
-            _children.Clear();
-            lease = _presenterLease;
-            _presenterLease = null;
+            lock (_gate)
+            {
+                _teardownStarted = true;
+                children = _children.ToArray();
+                _children.Clear();
+                lease = _presenterLease;
+                _presenterLease = null;
+            }
         }
 
         List<Exception>? failures = null;
@@ -140,6 +149,7 @@ internal sealed class FlowContentSession : IAsyncDisposable
         for (int index = children.Length - 1; index >= 0; index--)
         {
             await TryDisposeAsync(children[index], failures ??= []).ConfigureAwait(false);
+            children[index].ReleaseParentClaim(this);
         }
 
         if (lease is not null)
@@ -175,25 +185,44 @@ internal sealed class FlowContentSession : IAsyncDisposable
         }
     }
 
-    private void ClaimParent()
+    private void EnsureAcyclicChild(FlowContentSession child)
     {
-        ObjectDisposedException.ThrowIf(IsDisposalStarted, this);
-
-        if (Interlocked.CompareExchange(ref _hasParent, 1, 0) != 0)
+        for (FlowContentSession? ancestor = this; ancestor is not null; ancestor = ancestor._parent)
         {
-            throw new InvalidOperationException("A content session can have only one owning parent.");
+            if (ReferenceEquals(ancestor, child))
+            {
+                throw new InvalidOperationException("A content-session hierarchy cannot contain a cycle.");
+            }
         }
-
-        bool disposalStarted = IsDisposalStarted;
-        if (disposalStarted)
-        {
-            ReleaseParentClaim();
-        }
-
-        ObjectDisposedException.ThrowIf(disposalStarted, this);
     }
 
-    private void ReleaseParentClaim() => Volatile.Write(ref _hasParent, 0);
+    private void ClaimParent(FlowContentSession parent)
+    {
+        lock (_gate)
+        {
+            ThrowIfTeardownStarted();
+            if (_parent is not null)
+            {
+                throw new InvalidOperationException("A content session can have only one owning parent.");
+            }
+
+            _parent = parent;
+        }
+    }
+
+    private void ReleaseParentClaim(FlowContentSession parent)
+    {
+        lock (HierarchyGate)
+        {
+            lock (_gate)
+            {
+                if (ReferenceEquals(_parent, parent))
+                {
+                    _parent = null;
+                }
+            }
+        }
+    }
 
     private void ThrowIfTeardownStarted()
     {

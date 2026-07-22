@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using WebUIToolkit.MVVM.Flow.Tests.WaveB;
 
 namespace WebUIToolkit.MVVM.Flow.Tests;
 
@@ -26,5 +27,6 @@ internal static class ContractTestCatalog
         new("timeout cancellation uses provided clock", TimeoutTests.CancellationSourceUsesProvidedClock),
         new("timeout cancellation links caller cancellation", TimeoutTests.CancellationSourceLinksCallerToken),
         new("Flow diagnostics use the reserved WUTFLOW range", DiagnosticsTests.IdentifiersUseReservedRange),
+        .. WaveBTestCatalog.All,
     ];
 }
