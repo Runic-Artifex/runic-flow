@@ -10,5 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj" />
+    <ProjectReference Include="../../src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj" />
   </ItemGroup>
 </Project>
