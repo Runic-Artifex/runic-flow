@@ -112,8 +112,7 @@ Wave C owns integration without changing Wave A or Wave B semantics:
   validation, logging/event-ID projection, and graceful host-shutdown coordination;
 - adapters to the minimal frozen `WebUIToolkit.MVVM` observable/dispatcher
   abstractions once their package handoff is approved;
-- CommunityToolkit.MVVM and ReactiveUI command/state projections in their dedicated
-  packages;
+- CommunityToolkit.MVVM command/state projections in its dedicated Wave C package;
 - frontend presenters, contract-to-component/template mapping, browser history,
   focus/accessibility behavior, disconnect handling, and stale-event transport;
 - source-generated JSON or consumer codecs for deep links and checkpoint payloads;
@@ -121,6 +120,10 @@ Wave C owns integration without changing Wave A or Wave B semantics:
   authentication, expiration, and recovery;
 - shared adapter conformance fixtures, client-component and HTMX reference adapters,
   vertical hosting composition, and multi-RID release evidence.
+
+ReactiveUI command/state projection is deferred to Wave F. React, Vue, and Svelte
+presenters are deferred to Wave E, and Angular presentation is deferred to Wave F;
+their designs still consume Flow through the same frozen adapter boundary.
 
 Adapters depend on Flow; Flow does not depend on adapters or Hosting. Wave C may add
 convenience registration and projection APIs, but it must preserve frozen key
