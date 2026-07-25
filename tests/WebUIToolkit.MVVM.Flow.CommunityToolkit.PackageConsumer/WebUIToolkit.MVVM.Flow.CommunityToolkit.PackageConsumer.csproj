@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>WebUIToolkit.MVVM.Flow.CommunityToolkit.PackageConsumer</AssemblyName>
+    <RootNamespace>WebUIToolkit.MVVM.Flow.CommunityToolkit.PackageConsumer</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference
+      Condition="'$(FlowCommunityToolkitPackageVersion)' == ''"
+      Include="../../src/WebUIToolkit.MVVM.Flow.CommunityToolkit/WebUIToolkit.MVVM.Flow.CommunityToolkit.csproj" />
+    <PackageReference
+      Condition="'$(FlowCommunityToolkitPackageVersion)' != ''"
+      Include="WebUIToolkit.MVVM.Flow.CommunityToolkit"
+      Version="$(FlowCommunityToolkitPackageVersion)" />
+  </ItemGroup>
+</Project>

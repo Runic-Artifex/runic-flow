@@ -35,6 +35,36 @@ be portable and RID-free. A Native-AOT restore may resolve RID-specific runtime
 packs only into the ignored `obj/aot.packages.lock.json`; that temporary file must
 not replace or alter a committed lock.
 
+## Stage 3 CommunityToolkit projection handoff
+
+Stage 3 defines the adapter handoff without adding a Flow runtime dependency or
+loading CommunityToolkit code. The Stage 2 producer dependency is exactly
+`CommunityToolkit.Mvvm` `8.4.2`. The compiler entry point is
+`WebUIToolkit.MVVM.Build.Symbols.GeneratedMemberContractCompiler.Compile(WebUIToolkit.MVVM.Build.Symbols.GeneratedMemberContractRequest)`;
+its result identity is
+`WebUIToolkit.MVVM.Build.Symbols.GeneratedMemberContractResult`.
+
+The later adapter must preserve these compiler diagnostics: `WUTMVVM2014`
+(assembly not found), `WUTMVVM2015` (type not found), `WUTMVVM2016` (member
+missing), `WUTMVVM2017` (member inaccessible or incompatible), and `WUTMVVM2018`
+(member ambiguous or duplicate).
+
+| CommunityToolkit generated-member proof fixture | Flow projection fixture | Member |
+| --- | --- | --- |
+| `communitytoolkit.generated-member.title.v1` | `flow.projection.communitytoolkit.title.v1` | `101` / generated `Title` |
+| `communitytoolkit.generated-member.submit-command.v1` | `flow.projection.communitytoolkit.submit-command.v1` | `102` / generated `SubmitCommand` |
+
+`CommunityToolkitProjectionHandoff` in the generator-contract package owns this
+machine-checked string-only manifest. It must remain a handoff record: it is not a
+projection implementation and it must not acquire a CommunityToolkit assembly or
+package reference.
+
+`WebUIToolkit.MVVM.Flow.CommunityToolkit` consumes that manifest through direct
+generated-member delegates. It owns CommunityToolkit.Mvvm 8.4.2 command
+subscriptions, async running/cancellation state, bounded validation observations,
+stale-session rejection, and exact-once disposal. Flow core remains
+framework-neutral.
+
 ## Owned verification
 
 Run the BCL kernel and executable contract suite with locked restores:

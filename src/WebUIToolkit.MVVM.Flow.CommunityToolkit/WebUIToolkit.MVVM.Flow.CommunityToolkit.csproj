@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(WebUIToolkitDefaultTargetFramework)</TargetFramework>
+    <AssemblyName>WebUIToolkit.MVVM.Flow.CommunityToolkit</AssemblyName>
+    <RootNamespace>WebUIToolkit.MVVM.Flow.CommunityToolkit</RootNamespace>
+    <PackageId>WebUIToolkit.MVVM.Flow.CommunityToolkit</PackageId>
+    <Title>WebUIToolkit MVVM Flow CommunityToolkit integration</Title>
+    <Description>Reflection-free CommunityToolkit.Mvvm generated-member projections for WebUIToolkit MVVM Flow.</Description>
+    <Authors>WebUIToolkit contributors</Authors>
+    <PackageTags>webuitoolkit;mvvm;flow;communitytoolkit;projection</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+    <WebUIToolkitShippingProject>true</WebUIToolkitShippingProject>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebUIToolkit.MVVM.Flow\WebUIToolkit.MVVM.Flow.csproj" />
+    <PackageReference Include="CommunityToolkit.Mvvm"
+                      Version="[8.4.2]"
+                      PrivateAssets="contentfiles" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

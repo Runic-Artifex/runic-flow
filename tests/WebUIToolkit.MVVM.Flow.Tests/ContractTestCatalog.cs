@@ -27,6 +27,7 @@ internal static class ContractTestCatalog
         new("timeout cancellation uses provided clock", TimeoutTests.CancellationSourceUsesProvidedClock),
         new("timeout cancellation links caller cancellation", TimeoutTests.CancellationSourceLinksCallerToken),
         new("Flow diagnostics use the reserved WUTFLOW range", DiagnosticsTests.IdentifiersUseReservedRange),
+        new("CommunityToolkit projection handoff records metadata-only fixture mapping", CommunityToolkitProjectionHandoffTests.RecordsTheStageThreeHandoffWithoutRuntimeDependency),
         .. WaveBTestCatalog.All,
     ];
 }
