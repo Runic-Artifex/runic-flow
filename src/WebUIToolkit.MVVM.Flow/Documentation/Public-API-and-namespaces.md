@@ -115,7 +115,7 @@ serializer discovery is not a supported path.
 
 ## `WebUIToolkit.MVVM.Flow.Generators`
 
-The separate `WebUIToolkit.MVVM.Flow.Generators` package is a `netstandard2.0`,
+The separate `WebUIToolkit.MVVM.Flow.Generators` package is a `net10.0`,
 Roslyn-independent contract kernel. Its public surface is:
 
 - Input model: `FlowGeneratorInput`, `FlowGeneratorDeclaration`,

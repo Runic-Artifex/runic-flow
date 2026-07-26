@@ -25,10 +25,7 @@ public static class FlowDeterministicEmission
     /// <remarks>Non-ASCII and otherwise invalid code units are encoded as <c>_XXXX</c>.</remarks>
     public static string NormalizeIdentifier(string value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         StringBuilder builder = new StringBuilder(value.Length);
         for (int index = 0; index < value.Length; index++)
@@ -65,22 +62,16 @@ public static class FlowDeterministicEmission
     /// <summary>Normalizes generated text to line-feed endings and one final line feed.</summary>
     public static string NormalizeSourceText(string sourceText)
     {
-        if (sourceText is null)
-        {
-            throw new ArgumentNullException(nameof(sourceText));
-        }
+        ArgumentNullException.ThrowIfNull(sourceText);
 
         string normalized = sourceText.Replace("\r\n", "\n").Replace('\r', '\n');
-        return normalized.EndsWith("\n", StringComparison.Ordinal) ? normalized : normalized + "\n";
+        return normalized.EndsWith('\n') ? normalized : normalized + "\n";
     }
 
     /// <summary>Encodes a value as a deterministic C# string literal.</summary>
     public static string ToStringLiteral(string value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ArgumentNullException.ThrowIfNull(value);
 
         StringBuilder builder = new StringBuilder(value.Length + 2);
         builder.Append('"');

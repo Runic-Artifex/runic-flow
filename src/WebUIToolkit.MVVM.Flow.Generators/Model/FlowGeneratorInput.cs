@@ -14,10 +14,7 @@ public sealed class FlowGeneratorInput
     {
         ModuleNamespace = moduleNamespace ?? throw new ArgumentNullException(nameof(moduleNamespace));
         ModuleName = moduleName ?? throw new ArgumentNullException(nameof(moduleName));
-        if (declarations is null)
-        {
-            throw new ArgumentNullException(nameof(declarations));
-        }
+        ArgumentNullException.ThrowIfNull(declarations);
 
         List<FlowGeneratorDeclaration> copied = new List<FlowGeneratorDeclaration>();
         foreach (FlowGeneratorDeclaration declaration in declarations)

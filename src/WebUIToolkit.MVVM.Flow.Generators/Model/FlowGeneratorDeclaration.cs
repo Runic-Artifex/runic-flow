@@ -23,10 +23,7 @@ public sealed class FlowGeneratorDeclaration
         TypeName = typeName ?? throw new ArgumentNullException(nameof(typeName));
         Contract = contract ?? throw new ArgumentNullException(nameof(contract));
         Location = location ?? throw new ArgumentNullException(nameof(location));
-        if (properties is null)
-        {
-            throw new ArgumentNullException(nameof(properties));
-        }
+        ArgumentNullException.ThrowIfNull(properties);
 
         List<FlowGeneratorProperty> copied = new List<FlowGeneratorProperty>();
         foreach (FlowGeneratorProperty property in properties)

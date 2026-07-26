@@ -58,10 +58,7 @@ public sealed class FlowGeneratorDiagnosticDescriptor
     /// <summary>Formats a message using invariant culture.</summary>
     public string FormatMessage(params object?[] arguments)
     {
-        if (arguments is null)
-        {
-            throw new ArgumentNullException(nameof(arguments));
-        }
+        ArgumentNullException.ThrowIfNull(arguments);
 
         return string.Format(CultureInfo.InvariantCulture, MessageFormat, arguments);
     }

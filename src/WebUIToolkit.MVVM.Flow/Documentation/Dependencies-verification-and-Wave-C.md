@@ -25,9 +25,9 @@ versions are available. Closed delegates and disposable scope objects keep the
 kernel testable without a container. The Wave B project currently requires no MVVM
 or Microsoft.Extensions package at runtime.
 
-`WebUIToolkit.MVVM.Flow.Generators` targets `netstandard2.0`. Its only locked package
-graph is the target framework's `NETStandard.Library` and transitive platform
-metadata. It intentionally has no Microsoft.CodeAnalysis dependency in Wave B;
+`WebUIToolkit.MVVM.Flow.Generators` targets `net10.0`. Its locked package graph
+contains only target-framework platform metadata. It intentionally has no
+Microsoft.CodeAnalysis dependency in Wave B;
 Roslyn binding is a future adapter over the frozen diagnostic and emission models.
 
 Project-local `packages.lock.json` files are owned artifacts. Committed locks must

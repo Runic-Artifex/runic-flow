@@ -38,7 +38,7 @@ identities are rejected.
 ## Generator boundary
 
 Explicit fluent registration is always supported and is the semantic authority.
-Wave B ships a Roslyn-independent `netstandard2.0` generator contract kernel. A
+Wave B ships a Roslyn-independent `net10.0` generator contract kernel. A
 future Roslyn front end may only emit deterministic, fully qualified, closed-generic
 calls to the same public registration APIs. It must not introduce a second runtime
 model.

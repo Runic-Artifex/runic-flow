@@ -47,10 +47,7 @@ public sealed class FlowProjectionFixtureMapping
     {
         CommunityToolkitProofFixtureId = communityToolkitProofFixtureId ?? throw new ArgumentNullException(nameof(communityToolkitProofFixtureId));
         FlowProjectionFixtureId = flowProjectionFixtureId ?? throw new ArgumentNullException(nameof(flowProjectionFixtureId));
-        if (memberId <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(memberId));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(memberId);
 
         GeneratedMemberName = generatedMemberName ?? throw new ArgumentNullException(nameof(generatedMemberName));
         if (memberKind is < FlowProjectionMemberKind.Property or > FlowProjectionMemberKind.Command)

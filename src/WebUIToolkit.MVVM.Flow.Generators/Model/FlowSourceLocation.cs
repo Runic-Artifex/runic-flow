@@ -13,30 +13,11 @@ public sealed class FlowSourceLocation : IEquatable<FlowSourceLocation>
     /// <param name="column">The zero-based start column.</param>
     public FlowSourceLocation(string path, int start, int length, int line, int column)
     {
-        if (path is null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-
-        if (start < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(start));
-        }
-
-        if (length < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(length));
-        }
-
-        if (line < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(line));
-        }
-
-        if (column < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(column));
-        }
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentOutOfRangeException.ThrowIfNegative(start);
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
+        ArgumentOutOfRangeException.ThrowIfNegative(line);
+        ArgumentOutOfRangeException.ThrowIfNegative(column);
 
         Path = path.Replace('\\', '/');
         Start = start;

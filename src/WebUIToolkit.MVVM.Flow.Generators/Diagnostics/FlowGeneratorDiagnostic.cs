@@ -18,10 +18,7 @@ public sealed class FlowGeneratorDiagnostic
     {
         Descriptor = descriptor ?? throw new ArgumentNullException(nameof(descriptor));
         Location = location ?? throw new ArgumentNullException(nameof(location));
-        if (relatedLocations is null)
-        {
-            throw new ArgumentNullException(nameof(relatedLocations));
-        }
+        ArgumentNullException.ThrowIfNull(relatedLocations);
 
         List<FlowSourceLocation> copiedLocations = new List<FlowSourceLocation>();
         foreach (FlowSourceLocation relatedLocation in relatedLocations)

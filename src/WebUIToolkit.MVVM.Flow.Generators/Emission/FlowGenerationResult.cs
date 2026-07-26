@@ -15,15 +15,8 @@ public sealed class FlowGenerationResult
         IEnumerable<FlowGeneratedSource> sources,
         IEnumerable<FlowGeneratorDiagnostic> diagnostics)
     {
-        if (sources is null)
-        {
-            throw new ArgumentNullException(nameof(sources));
-        }
-
-        if (diagnostics is null)
-        {
-            throw new ArgumentNullException(nameof(diagnostics));
-        }
+        ArgumentNullException.ThrowIfNull(sources);
+        ArgumentNullException.ThrowIfNull(diagnostics);
 
         List<FlowGeneratedSource> copiedSources = new List<FlowGeneratedSource>();
         foreach (FlowGeneratedSource source in sources)
