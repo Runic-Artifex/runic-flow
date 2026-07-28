@@ -358,6 +358,11 @@ public interface INavigationService
     /// <summary>Determines whether an adapter event still targets current content.</summary>
     bool IsCurrentSession(RegionKey region, FlowSessionId sessionId);
 
+    /// <summary>Asks the current ViewModel guard whether application close may leave a region.</summary>
+    ValueTask<NavigationGuardResult> CanLeaveAsync(
+        RegionKey region,
+        CancellationToken cancellationToken = default);
+
     /// <summary>Rejects new work, cancels queued requests, and tears down all regions.</summary>
     ValueTask ShutdownAsync(CancellationToken cancellationToken = default);
 }

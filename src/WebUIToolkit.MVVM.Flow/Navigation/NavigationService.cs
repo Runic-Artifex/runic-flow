@@ -201,6 +201,39 @@ public sealed class NavigationService : INavigationService, IAsyncDisposable
     }
 
     /// <inheritdoc />
+    public async ValueTask<NavigationGuardResult> CanLeaveAsync(
+        RegionKey region,
+        CancellationToken cancellationToken = default)
+    {
+        RegionState state = GetRegion(region);
+        NavigationResult result = await RunMutationAsync(
+            state,
+            async () =>
+            {
+                NavigationEntry? current =
+                    state.Stack.Count == 0 ? null : state.Stack[^1];
+                NavigationResult? rejection = await CheckGuardAsync(
+                    state,
+                    current,
+                    targetRoute: null,
+                    mode: null,
+                    cancellationToken).ConfigureAwait(false);
+                return rejection ??
+                    new NavigationResult(NavigationResultKind.NoOp, state.Snapshot);
+            },
+            cancellationToken).ConfigureAwait(false);
+
+        return result.Kind switch
+        {
+            NavigationResultKind.Rejected =>
+                NavigationGuardResult.Deny(result.Reason ?? "Navigation close was denied."),
+            NavigationResultKind.Busy =>
+                NavigationGuardResult.Deny("Navigation is busy."),
+            _ => NavigationGuardResult.Allow(),
+        };
+    }
+
+    /// <inheritdoc />
     public ValueTask ShutdownAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
