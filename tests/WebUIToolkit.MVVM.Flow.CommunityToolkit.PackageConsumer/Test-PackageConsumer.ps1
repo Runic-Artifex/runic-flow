@@ -18,6 +18,10 @@ $config = Join-Path $scratch "NuGet.config"
 $committedLock = Join-Path $PSScriptRoot "packages.lock.json"
 $replayLock = Join-Path $consumerDirectory "packages.lock.json"
 $originalNuGetPackages = $env:NUGET_PACKAGES
+# Package replay proves deterministic bytes independently of the checkout shape.
+# GitHub pull requests build a synthetic merge commit, so these disposable local
+# packages use a stable revision while release packaging retains real provenance.
+$replayRevision = "0000000000000000000000000000000000000000"
 
 function Invoke-DotNet {
     param([Parameter(Mandatory)][string[]]$Arguments)
@@ -246,9 +250,11 @@ try {
 
     Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
         "-p:ContinuousIntegrationBuild=true", "-p:PathMap=$root=/_/",
+        "-p:RepositoryCommit=$replayRevision", "-p:SourceRevisionId=$replayRevision",
         "-o", $feed, (Join-Path $root "src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj"))
     Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
         "-p:ContinuousIntegrationBuild=true", "-p:PathMap=$root=/_/",
+        "-p:RepositoryCommit=$replayRevision", "-p:SourceRevisionId=$replayRevision",
         "-o", $feed, (Join-Path $root "src/WebUIToolkit.MVVM.Flow.CommunityToolkit/WebUIToolkit.MVVM.Flow.CommunityToolkit.csproj"))
 
     $runtimePackage = Join-Path $feed "WebUIToolkit.MVVM.Flow.0.0.0-local.nupkg"
