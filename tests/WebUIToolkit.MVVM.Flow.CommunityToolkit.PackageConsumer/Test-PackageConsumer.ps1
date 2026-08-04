@@ -249,11 +249,11 @@ try {
 "@ | Set-Content -Encoding UTF8 $config
 
     Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
-        "-p:ContinuousIntegrationBuild=true", "-p:PathMap=$root=/_/",
+        "-p:ContinuousIntegrationBuild=true", "-p:WebUIToolkitBuildMode=Verification", "-p:PathMap=$root=/_/",
         "-p:RepositoryCommit=$replayRevision", "-p:SourceRevisionId=$replayRevision",
         "-o", $feed, (Join-Path $root "src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj"))
     Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
-        "-p:ContinuousIntegrationBuild=true", "-p:PathMap=$root=/_/",
+        "-p:ContinuousIntegrationBuild=true", "-p:WebUIToolkitBuildMode=Verification", "-p:PathMap=$root=/_/",
         "-p:RepositoryCommit=$replayRevision", "-p:SourceRevisionId=$replayRevision",
         "-o", $feed, (Join-Path $root "src/WebUIToolkit.MVVM.Flow.CommunityToolkit/WebUIToolkit.MVVM.Flow.CommunityToolkit.csproj"))
 
