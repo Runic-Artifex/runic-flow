@@ -15,4 +15,5 @@ or TypeScript presentation. `NavigationDesktopCloseGuard` maps the existing
 current-page guards onto `IDesktopApplicationLifetime`; migrated applications
 therefore do not need a second navigation, dialog, or close-guard abstraction.
 
-Publication remains subject to the repository's pending license decision.
+The project is licensed under the repository's MIT License. Package publication
+still requires independent identity and release-readiness review.
