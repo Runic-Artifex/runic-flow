@@ -25,15 +25,13 @@ versions are available. Closed delegates and disposable scope objects keep the
 kernel testable without a container. The Wave B project currently requires no MVVM
 or Microsoft.Extensions package at runtime.
 
-`WebUIToolkit.MVVM.Flow.Generators` targets `net10.0`. Its locked package graph
-contains only target-framework platform metadata. It intentionally has no
+`WebUIToolkit.MVVM.Flow.Generators` targets `net10.0`. It intentionally has no
 Microsoft.CodeAnalysis dependency in Wave B;
 Roslyn binding is a future adapter over the frozen diagnostic and emission models.
 
-Project-local `packages.lock.json` files are owned artifacts. Committed locks must
-be portable and RID-free. A Native-AOT restore may resolve RID-specific runtime
-packs only into the ignored `obj/aot.packages.lock.json`; that temporary file must
-not replace or alter a committed lock.
+This library repository does not commit NuGet lock files. Package constraints are
+owned centrally, while applications consuming Flow own their resolved dependency
+graphs and may commit lock files when reproducible deployment requires them.
 
 ## Stage 3 CommunityToolkit projection handoff
 
@@ -67,12 +65,12 @@ framework-neutral.
 
 ## Owned verification
 
-Run the BCL kernel and executable contract suite with locked restores:
+Run the BCL kernel and executable contract suite:
 
 ```powershell
-dotnet restore --locked-mode src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj
-dotnet restore --locked-mode src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj
-dotnet restore --locked-mode tests/WebUIToolkit.MVVM.Flow.Tests/WebUIToolkit.MVVM.Flow.Tests.csproj
+dotnet restore src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj
+dotnet restore src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj
+dotnet restore tests/WebUIToolkit.MVVM.Flow.Tests/WebUIToolkit.MVVM.Flow.Tests.csproj
 dotnet build -c Release --no-restore src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj
 dotnet build -c Release --no-restore src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj
 dotnet run -c Release --no-restore --project tests/WebUIToolkit.MVVM.Flow.Tests/WebUIToolkit.MVVM.Flow.Tests.csproj
@@ -85,28 +83,28 @@ dotnet pack -c Release --no-restore -p:PackageVersion=0.0.0-local -o artifacts/p
 ```
 
 `FlowPackageVersion` switches the executable consumer from its development
-`ProjectReference` to the packed artifact. Its package-mode lock is temporary:
+`ProjectReference` to the packed artifact:
 
 ```powershell
-dotnet restore -p:FlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages -p:NuGetLockFilePath=obj/package.packages.lock.json -p:RestoreLockedMode=false tests/WebUIToolkit.MVVM.Flow.PackageConsumer/WebUIToolkit.MVVM.Flow.PackageConsumer.csproj
+dotnet restore -p:FlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages tests/WebUIToolkit.MVVM.Flow.PackageConsumer/WebUIToolkit.MVVM.Flow.PackageConsumer.csproj
 dotnet run -c Release --no-restore -p:FlowPackageVersion=0.0.0-local --project tests/WebUIToolkit.MVVM.Flow.PackageConsumer/WebUIToolkit.MVVM.Flow.PackageConsumer.csproj
 ```
 
 The consumer must run and exit zero without falling back to a source project or an
 undeclared package feed.
 
-For Native AOT, keep the committed lock portable and create a temporary RID lock:
+For Native AOT, restore the selected runtime identifier before publishing:
 
 ```powershell
-dotnet restore --locked-mode tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
+dotnet restore tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
 dotnet pack -c Release -p:PackageVersion=0.0.0-local -o artifacts/packages src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj
-dotnet restore -r win-x64 -p:FlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages -p:PublishAot=true -p:PublishTrimmed=true -p:NuGetLockFilePath=obj/aot.packages.lock.json -p:RestoreLockedMode=false tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
-dotnet publish -c Release -r win-x64 --no-restore -p:FlowPackageVersion=0.0.0-local -p:PublishAot=true -p:PublishTrimmed=true -p:NuGetLockFilePath=obj/aot.packages.lock.json tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
+dotnet restore -r win-x64 -p:FlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages -p:PublishAot=true -p:PublishTrimmed=true tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
+dotnet publish -c Release -r win-x64 --no-restore -p:FlowPackageVersion=0.0.0-local -p:PublishAot=true -p:PublishTrimmed=true tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj
 ```
 
 Run the produced executable and require exit code zero and no owned trim/AOT
-warnings. Repeat with a separate temporary RID lock for every additional supported
-RID. Repository namespace and architecture gates remain mandatory:
+warnings. Repeat the restore and publish for every additional supported RID.
+Repository namespace and architecture gates remain mandatory:
 
 ```powershell
 pwsh eng/verify-namespaces.ps1

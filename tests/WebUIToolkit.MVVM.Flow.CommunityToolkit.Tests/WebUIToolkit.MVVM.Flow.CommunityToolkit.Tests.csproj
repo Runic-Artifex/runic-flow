@@ -9,9 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/WebUIToolkit.MVVM/WebUIToolkit.MVVM.csproj" />
     <ProjectReference Include="../../src/WebUIToolkit.MVVM.Flow.CommunityToolkit/WebUIToolkit.MVVM.Flow.CommunityToolkit.csproj" />
     <ProjectReference Include="../../src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Toolkit MVVM wire-protocol evidence belongs to RunicFlow.RunicToolkit. -->
+    <Compile Remove="G3EvidenceTests.cs" />
+    <None Include="G3EvidenceTests.cs" />
   </ItemGroup>
 </Project>

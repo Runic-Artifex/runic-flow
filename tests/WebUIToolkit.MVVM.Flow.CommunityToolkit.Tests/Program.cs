@@ -32,7 +32,6 @@ internal static partial class Program
             await RunAsync(
                 "flow.projection.communitytoolkit.async-command.v1",
                 AsyncCommandCancellationAndDisposalAsync);
-            await RunFlowG3EvidenceAsync();
             Console.WriteLine($"PASS: {_passed} Flow CommunityToolkit fixtures");
             return 0;
         }
