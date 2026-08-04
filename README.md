@@ -33,7 +33,7 @@ nix develop
 ./eng/verify.sh
 ```
 
-Verification performs a locked restore, a warning-free Release build, the Flow
+Verification performs a restore, a warning-free Release build, the Flow
 contract suites, the CommunityToolkit adapter fixtures, and a NativeAOT publish
 and execution smoke test.
 

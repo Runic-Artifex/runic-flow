@@ -25,7 +25,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-dotnet restore "$solution" --locked-mode
+dotnet restore "$solution"
 dotnet build "$solution" --configuration "$configuration" --no-restore
 
 dotnet run \
@@ -46,11 +46,8 @@ pwsh -NoProfile \
 dotnet restore \
   tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj \
   --runtime "$runtime_identifier" \
-  --force-evaluate \
   -p:PublishAot=true \
-  -p:PublishTrimmed=true \
-  -p:NuGetLockFilePath=obj/aot.packages.lock.json \
-  -p:RestoreLockedMode=false
+  -p:PublishTrimmed=true
 
 dotnet publish \
   tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj \
