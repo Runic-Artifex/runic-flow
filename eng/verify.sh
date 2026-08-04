@@ -25,32 +25,34 @@ cleanup() {
 }
 trap cleanup EXIT
 
+./eng/verify-identities.sh
+
 dotnet restore "$solution"
 dotnet build "$solution" --configuration "$configuration" --no-restore
 
 dotnet run \
-  --project tests/WebUIToolkit.MVVM.Flow.Tests/WebUIToolkit.MVVM.Flow.Tests.csproj \
+  --project tests/RunicFlow.Tests/RunicFlow.Tests.csproj \
   --configuration "$configuration" \
   --no-build
 
 dotnet run \
-  --project tests/WebUIToolkit.MVVM.Flow.CommunityToolkit.Tests/WebUIToolkit.MVVM.Flow.CommunityToolkit.Tests.csproj \
+  --project tests/RunicFlow.CommunityToolkit.Tests/RunicFlow.CommunityToolkit.Tests.csproj \
   --configuration "$configuration" \
   --no-build
 
 pwsh -NoProfile \
-  -File tests/WebUIToolkit.MVVM.Flow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1 \
+  -File tests/RunicFlow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1 \
   -Configuration "$configuration" \
   -SkipNativeAot
 
 dotnet restore \
-  tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj \
+  tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj \
   --runtime "$runtime_identifier" \
   -p:PublishAot=true \
   -p:PublishTrimmed=true
 
 dotnet publish \
-  tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj \
+  tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj \
   --configuration "$configuration" \
   --runtime "$runtime_identifier" \
   --no-restore \
@@ -58,4 +60,4 @@ dotnet publish \
   -p:PublishTrimmed=true \
   --output "$verification_tmp/aot"
 
-"$verification_tmp/aot/WebUIToolkit.MVVM.Flow.AotSmoke"
+"$verification_tmp/aot/RunicFlow.AotSmoke"

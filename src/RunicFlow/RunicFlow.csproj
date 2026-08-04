@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(RunicFlowDefaultTargetFramework)</TargetFramework>
+    <AssemblyName>RunicFlow</AssemblyName>
+    <RootNamespace>RunicFlow</RootNamespace>
+    <PackageId>RunicFlow</PackageId>
+    <Title>Runic Flow</Title>
+    <Description>Framework-neutral navigation, dialogs, operations, and workflow contracts for .NET applications.</Description>
+    <Authors>RunicArtifex</Authors>
+    <PackageTags>runic;flow;navigation;dialogs;operations;workflow</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+    <RunicFlowShippingProject>true</RunicFlowShippingProject>
+    <!-- The frozen contract intentionally follows the standard result-type factory shape. -->
+    <NoWarn>$(NoWarn);CA1000</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

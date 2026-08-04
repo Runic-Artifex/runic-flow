@@ -1,12 +1,12 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/WebUIToolkit.MVVM.Flow/WebUIToolkit.MVVM.Flow.csproj" />
-    <Project Path="src/WebUIToolkit.MVVM.Flow.Generators/WebUIToolkit.MVVM.Flow.Generators.csproj" />
-    <Project Path="src/WebUIToolkit.MVVM.Flow.CommunityToolkit/WebUIToolkit.MVVM.Flow.CommunityToolkit.csproj" />
+    <Project Path="src/RunicFlow/RunicFlow.csproj" />
+    <Project Path="src/RunicFlow.Generators/RunicFlow.Generators.csproj" />
+    <Project Path="src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/WebUIToolkit.MVVM.Flow.AotSmoke/WebUIToolkit.MVVM.Flow.AotSmoke.csproj" />
-    <Project Path="tests/WebUIToolkit.MVVM.Flow.CommunityToolkit.Tests/WebUIToolkit.MVVM.Flow.CommunityToolkit.Tests.csproj" />
-    <Project Path="tests/WebUIToolkit.MVVM.Flow.Tests/WebUIToolkit.MVVM.Flow.Tests.csproj" />
+    <Project Path="tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj" />
+    <Project Path="tests/RunicFlow.CommunityToolkit.Tests/RunicFlow.CommunityToolkit.Tests.csproj" />
+    <Project Path="tests/RunicFlow.Tests/RunicFlow.Tests.csproj" />
   </Folder>
 </Solution>

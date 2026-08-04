@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>RunicFlow.CommunityToolkit.PackageConsumer</AssemblyName>
+    <RootNamespace>RunicFlow.CommunityToolkit.PackageConsumer</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference
+      Condition="'$(RunicFlowCommunityToolkitPackageVersion)' == ''"
+      Include="../../src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj" />
+    <PackageReference
+      Condition="'$(RunicFlowCommunityToolkitPackageVersion)' != ''"
+      Include="RunicFlow.CommunityToolkit"
+      Version="$(RunicFlowCommunityToolkitPackageVersion)" />
+  </ItemGroup>
+</Project>

@@ -1,16 +1,16 @@
 <Project>
-  <PropertyGroup Condition="'$(WebUIToolkitShippingProject)' == 'true'">
-    <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == '' and ('$(WebUIToolkitVerificationBuild)' == 'true' or '$(PublishTrimmed)' == 'true' or '$(PublishAot)' == 'true')">true</EnableTrimAnalyzer>
+  <PropertyGroup Condition="'$(RunicFlowShippingProject)' == 'true'">
+    <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == '' and ('$(RunicFlowVerificationBuild)' == 'true' or '$(PublishTrimmed)' == 'true' or '$(PublishAot)' == 'true')">true</EnableTrimAnalyzer>
     <EnableTrimAnalyzer Condition="'$(EnableTrimAnalyzer)' == ''">false</EnableTrimAnalyzer>
-    <EnableAotAnalyzer Condition="'$(EnableAotAnalyzer)' == '' and ('$(WebUIToolkitVerificationBuild)' == 'true' or '$(PublishAot)' == 'true')">true</EnableAotAnalyzer>
+    <EnableAotAnalyzer Condition="'$(EnableAotAnalyzer)' == '' and ('$(RunicFlowVerificationBuild)' == 'true' or '$(PublishAot)' == 'true')">true</EnableAotAnalyzer>
     <EnableAotAnalyzer Condition="'$(EnableAotAnalyzer)' == ''">false</EnableAotAnalyzer>
     <IsTrimmable>true</IsTrimmable>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
-  <Target Name="ValidateWebUIToolkitBuildMode" BeforeTargets="PrepareForBuild">
+  <Target Name="ValidateRunicFlowBuildMode" BeforeTargets="PrepareForBuild">
     <Error
-      Condition="'$(WebUIToolkitBuildMode)' != 'Development' and '$(WebUIToolkitBuildMode)' != 'Verification'"
-      Text="WebUIToolkitBuildMode must be either Development or Verification." />
+      Condition="'$(RunicFlowBuildMode)' != 'Development' and '$(RunicFlowBuildMode)' != 'Verification'"
+      Text="RunicFlowBuildMode must be either Development or Verification." />
   </Target>
 </Project>

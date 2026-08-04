@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using WebUIToolkit.Desktop;
-using WebUIToolkit.MVVM.Flow;
+using RunicToolkit.Desktop;
+using RunicFlow;
 
-namespace WebUIToolkit.MVVM.Navigation;
+namespace RunicFlow.RunicToolkit.Navigation;
 
 /// <summary>
 /// Maps application close onto the existing current-page navigation guards without
