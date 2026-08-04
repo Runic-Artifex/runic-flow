@@ -8,17 +8,8 @@
         "resolved": "8.4.2",
         "contentHash": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg=="
       },
-      "webuitoolkit.desktop": {
-        "type": "Project"
-      },
-      "webuitoolkit.mvvm": {
-        "type": "Project"
-      },
       "webuitoolkit.mvvm.flow": {
-        "type": "Project",
-        "dependencies": {
-          "WebUIToolkit.Desktop": "[1.0.0-beta.1, )"
-        }
+        "type": "Project"
       },
       "webuitoolkit.mvvm.flow.communitytoolkit": {
         "type": "Project",

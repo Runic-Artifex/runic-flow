@@ -30,7 +30,6 @@ internal static class ContractTestCatalog
         new("CommunityToolkit projection handoff records metadata-only fixture mapping", CommunityToolkitProjectionHandoffTests.RecordsTheStageThreeHandoffWithoutRuntimeDependency),
         new("observable navigation outlets ignore stale lease closure", ObservablePresenterTests.NavigationOutletsIgnoreStaleLeaseClosure),
         new("observable dialog outlets preserve typed controllers", ObservablePresenterTests.DialogOutletsPreserveTypedControllers),
-        new("desktop close reuses current navigation guards", ObservablePresenterTests.DesktopCloseReusesNavigationGuards),
         .. WaveBTestCatalog.All,
     ];
 }

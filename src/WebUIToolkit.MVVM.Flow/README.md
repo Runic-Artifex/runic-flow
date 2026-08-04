@@ -11,9 +11,9 @@ Public feature APIs remain in the flat namespaces `WebUIToolkit.MVVM.Navigation`
 
 `ObservableNavigationPresenter` publishes immutable logical-region outlets and
 `ObservableDialogPresenter` publishes the active typed-dialog stack for cwhtml
-or TypeScript presentation. `NavigationDesktopCloseGuard` maps the existing
-current-page guards onto `IDesktopApplicationLifetime`; migrated applications
-therefore do not need a second navigation, dialog, or close-guard abstraction.
+or TypeScript presentation. Toolkit desktop lifetime mapping is owned by the
+separate `RunicFlow.RunicToolkit` integration boundary, so this core package has
+no UI-framework or Toolkit assembly dependency.
 
 The project is licensed under the repository's MIT License. Package publication
 still requires independent identity and release-readiness review.

@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using WebUIToolkit.Desktop;
 using WebUIToolkit.MVVM.Dialogs;
 using WebUIToolkit.MVVM.Flow.Presentation;
 using WebUIToolkit.MVVM.Navigation;
@@ -90,40 +89,6 @@ internal static class ObservablePresenterTests
         await lease.DisposeAsync();
     }
 
-    public static async ValueTask DesktopCloseReusesNavigationGuards()
-    {
-        var region = new RegionKey("main");
-        var route = new RouteKey("home");
-        var viewModel = new GuardedViewModel();
-        NavigationRegistry registry = new NavigationRegistryBuilder()
-            .AddRegion(new NavigationRegionRegistration(region, route, requireContent: true))
-            .AddPage<GuardedViewModel>(
-                route,
-                new ViewContract("home"),
-                _ => ValueTask.FromResult(
-                    new NavigationRouteContent(
-                        viewModel,
-                        new EmptyScope())))
-            .Build();
-        await using var navigation = new NavigationService(
-            registry,
-            new ObservableNavigationPresenter());
-        await navigation.StartAsync();
-        var closeGuard = new NavigationDesktopCloseGuard(navigation, [region]);
-
-        DesktopCloseDecision denied = await closeGuard.CanCloseAsync(
-            new DesktopCloseRequest(DesktopCloseReason.Application),
-            CancellationToken.None);
-        TestAssert.False(denied.IsAllowed);
-        TestAssert.Equal("unsaved work", denied.Reason);
-
-        viewModel.AllowClose = true;
-        DesktopCloseDecision allowed = await closeGuard.CanCloseAsync(
-            new DesktopCloseRequest(DesktopCloseReason.Application),
-            CancellationToken.None);
-        TestAssert.True(allowed.IsAllowed);
-    }
-
     private static FlowContentDescriptor Content(string contract) =>
         new(
             FlowSessionId.Create(),
@@ -161,26 +126,4 @@ internal static class ObservablePresenterTests
         }
     }
 
-    private sealed class GuardedViewModel : INavigationGuard
-    {
-        internal bool AllowClose { get; set; }
-
-        public ValueTask<NavigationGuardResult> CanLeaveAsync(
-            NavigationGuardContext context,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return ValueTask.FromResult(
-                AllowClose
-                    ? NavigationGuardResult.Allow()
-                    : NavigationGuardResult.Deny("unsaved work"));
-        }
-    }
-
-    private sealed class EmptyScope : IDisposable
-    {
-        public void Dispose()
-        {
-        }
-    }
 }
