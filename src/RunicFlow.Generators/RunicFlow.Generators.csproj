@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(RunicFlowGeneratorTargetFramework)</TargetFramework>
+    <AssemblyName>RunicFlow.Generators</AssemblyName>
+    <RootNamespace>RunicFlow.Generators</RootNamespace>
+    <PackageId>RunicFlow.Generators</PackageId>
+    <Title>Runic Flow Generator Contracts</Title>
+    <Description>Roslyn-independent contracts and deterministic emission vocabulary for Runic Flow generators.</Description>
+    <Authors>RunicArtifex</Authors>
+    <PackageTags>runic;flow;generator;diagnostics</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

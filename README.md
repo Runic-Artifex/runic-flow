@@ -6,17 +6,17 @@ and deterministic generator vocabulary. Its core is designed for trimming and
 NativeAOT and does not depend on a UI framework or Runic Toolkit.
 
 This repository was extracted from Runic Toolkit with its product history intact.
-The current package and namespace identities are retained temporarily so the
-standalone dependency boundary can be proven before the clean-break
-`RunicFlow.*` identity migration.
+It uses the independent `RunicFlow.*` package, assembly, namespace, diagnostic,
+and protocol identities without compatibility aliases for the retired Toolkit
+identities.
 
 ## Projects
 
 | Project | Purpose |
 | --- | --- |
-| `WebUIToolkit.MVVM.Flow` | UI-neutral navigation, dialogs, operations, workflows, and presentation contracts |
-| `WebUIToolkit.MVVM.Flow.Generators` | Roslyn-independent generator and diagnostic contracts |
-| `WebUIToolkit.MVVM.Flow.CommunityToolkit` | Flow-owned CommunityToolkit.Mvvm projection adapter |
+| `RunicFlow` | UI-neutral navigation, dialogs, operations, workflows, and presentation contracts |
+| `RunicFlow.Generators` | Roslyn-independent generator and diagnostic contracts |
+| `RunicFlow.CommunityToolkit` | Flow-owned CommunityToolkit.Mvvm projection adapter |
 | `integrations/RunicFlow.RunicToolkit` | Staged Toolkit integration boundary owned by Flow |
 
 The Toolkit adapter source is intentionally outside the standalone solution until

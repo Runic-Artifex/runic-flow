@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>RunicFlow.AotSmoke</AssemblyName>
+    <RootNamespace>RunicFlow.AotSmoke</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <TrimMode>full</TrimMode>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference
+      Condition="'$(RunicFlowPackageVersion)' == ''"
+      Include="../../src/RunicFlow/RunicFlow.csproj" />
+    <PackageReference
+      Condition="'$(RunicFlowPackageVersion)' != ''"
+      Include="RunicFlow"
+      Version="$(RunicFlowPackageVersion)" />
+  </ItemGroup>
+</Project>

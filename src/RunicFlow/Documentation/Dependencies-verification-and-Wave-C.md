@@ -1,0 +1,156 @@
+# Dependencies, verification, and Wave C boundary
+
+## Dependency manifest
+
+`RunicFlow` is a `net10.0` BCL-first shipping library. Its runtime
+project has no third-party or Hosting package reference. The centrally supplied
+`Microsoft.NET.ILLink.Tasks` package is a build/analyzer dependency used by shipping
+trim and Native-AOT analysis; it is not a runtime feature dependency.
+
+The allowed dependency direction is:
+
+```text
+frontend and MVVM-framework adapters
+                |
+                v
+RunicFlow -> BCL and approved minimal MVVM abstractions only
+                |
+                v
+              BCL
+```
+
+Flow never references a hosting framework. Microsoft.Extensions DI, logging, and
+options integration remains an outward adapter until approved central package
+versions are available. Closed delegates and disposable scope objects keep the
+kernel testable without a container. The Wave B project currently requires no MVVM
+or Microsoft.Extensions package at runtime.
+
+`RunicFlow.Generators` targets `net10.0`. It intentionally has no
+Microsoft.CodeAnalysis dependency in Wave B;
+Roslyn binding is a future adapter over the frozen diagnostic and emission models.
+
+This library repository does not commit NuGet lock files. Package constraints are
+owned centrally, while applications consuming Flow own their resolved dependency
+graphs and may commit lock files when reproducible deployment requires them.
+
+## Stage 3 CommunityToolkit projection handoff
+
+Stage 3 defines the adapter handoff without adding a Flow runtime dependency or
+loading CommunityToolkit code. The producer dependency is exactly
+`CommunityToolkit.Mvvm` `8.4.2`. The handoff records only Flow-owned protocol and
+fixture identities; compiler-specific type names and diagnostics belong to the
+integration that invokes that compiler.
+
+| CommunityToolkit generated-member proof fixture | Flow projection fixture | Member |
+| --- | --- | --- |
+| `communitytoolkit.generated-member.title.v1` | `flow.projection.communitytoolkit.title.v1` | `101` / generated `Title` |
+| `communitytoolkit.generated-member.submit-command.v1` | `flow.projection.communitytoolkit.submit-command.v1` | `102` / generated `SubmitCommand` |
+
+`CommunityToolkitProjectionHandoff` in the generator-contract package owns this
+machine-checked string-only manifest. It must remain a handoff record: it is not a
+projection implementation and it must not acquire a CommunityToolkit assembly or
+package reference.
+
+`RunicFlow.CommunityToolkit` consumes that manifest through direct
+generated-member delegates. It owns CommunityToolkit.Mvvm 8.4.2 command
+subscriptions, async running/cancellation state, bounded validation observations,
+stale-session rejection, and exact-once disposal. Flow core remains
+framework-neutral.
+
+## Owned verification
+
+Run the BCL kernel and executable contract suite:
+
+```powershell
+dotnet restore src/RunicFlow/RunicFlow.csproj
+dotnet restore src/RunicFlow.Generators/RunicFlow.Generators.csproj
+dotnet restore tests/RunicFlow.Tests/RunicFlow.Tests.csproj
+dotnet build -c Release --no-restore src/RunicFlow/RunicFlow.csproj
+dotnet build -c Release --no-restore src/RunicFlow.Generators/RunicFlow.Generators.csproj
+dotnet run -c Release --no-restore --project tests/RunicFlow.Tests/RunicFlow.Tests.csproj
+```
+
+Build a local package before validating a consumer:
+
+```powershell
+dotnet pack -c Release --no-restore -p:PackageVersion=0.0.0-local -o artifacts/packages src/RunicFlow/RunicFlow.csproj
+```
+
+`RunicFlowPackageVersion` switches the executable consumer from its development
+`ProjectReference` to the packed artifact:
+
+```powershell
+dotnet restore -p:RunicFlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages tests/RunicFlow.PackageConsumer/RunicFlow.PackageConsumer.csproj
+dotnet run -c Release --no-restore -p:RunicFlowPackageVersion=0.0.0-local --project tests/RunicFlow.PackageConsumer/RunicFlow.PackageConsumer.csproj
+```
+
+The consumer must run and exit zero without falling back to a source project or an
+undeclared package feed.
+
+For Native AOT, restore the selected runtime identifier before publishing:
+
+```powershell
+dotnet restore tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj
+dotnet pack -c Release -p:PackageVersion=0.0.0-local -o artifacts/packages src/RunicFlow/RunicFlow.csproj
+dotnet restore -r win-x64 -p:RunicFlowPackageVersion=0.0.0-local -p:RestoreAdditionalProjectSources=artifacts/packages -p:PublishAot=true -p:PublishTrimmed=true tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj
+dotnet publish -c Release -r win-x64 --no-restore -p:RunicFlowPackageVersion=0.0.0-local -p:PublishAot=true -p:PublishTrimmed=true tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj
+```
+
+Run the produced executable and require exit code zero and no owned trim/AOT
+warnings. Repeat the restore and publish for every additional supported RID.
+Repository namespace and architecture gates remain mandatory:
+
+```powershell
+pwsh eng/verify-namespaces.ps1
+pwsh eng/verify-architecture.ps1
+```
+
+## Required behavioral evidence
+
+Executable tests assert order, not only final state. The Wave B matrix includes:
+
+- navigation commit/rollback, guards, retention, stale sessions, queue/reject,
+  presenter failures, lifecycle failure aggregation, shutdown, and reverse cleanup;
+- nullable typed dialog results, close-guard deny/retry, racing completion sources,
+  nested ownership, caller cancellation, presenter open/close failures, manual-clock
+  overall teardown deadlines, accepted-outcome preservation, and shutdown;
+- every operation slot policy, progress validation, timeout through a manual clock,
+  cooperative delegates that do and do not observe cancellation, delayed
+  CancelPrevious admission, presenter admission, monitor retention, cleanup
+  precedence, and concurrent cancel;
+- workflow branching, exclusions, validation stay, commit faults, actual-history Back,
+  redirect loops, typed finish retry without repeated commit, active-mutation
+  cancellation during disposal, teardown safety-abandon and late-fault observation,
+  retention, checkpoint
+  round-trip/rejection/migration, restore-before-activation validation, and shutdown;
+- deterministic generator output/diagnostics, packed public consumer execution, and
+  Native-AOT publish-and-run.
+
+## Deferred Wave C edges
+
+Wave C owns integration without changing Wave A or Wave B semantics:
+
+- Microsoft.Extensions dependency-injection builders, scope factories, options
+  validation, logging/event-ID projection, and graceful host-shutdown coordination;
+- adapters to Runic Toolkit observable/dispatcher abstractions once their package
+  handoff is approved;
+- CommunityToolkit.MVVM command/state projections in its dedicated Wave C package;
+- frontend presenters, contract-to-component/template mapping, browser history,
+  focus/accessibility behavior, disconnect handling, and stale-event transport;
+- source-generated JSON or consumer codecs for deep links and checkpoint payloads;
+- application policies for checkpoint storage, migration orchestration, encryption,
+  authentication, expiration, and recovery;
+- shared adapter conformance fixtures, client-component and HTMX reference adapters,
+  vertical hosting composition, and multi-RID release evidence.
+
+ReactiveUI command/state projection is deferred to Wave F. React, Vue, and Svelte
+presenters are deferred to Wave E, and Angular presentation is deferred to Wave F;
+their designs still consume Flow through the same frozen adapter boundary.
+
+Adapters depend on Flow; Flow does not depend on adapters or Hosting. Wave C may add
+convenience registration and projection APIs, but it must preserve frozen key
+comparison, lifecycle ordering and commit points, typed outcomes, exact-once
+completion/teardown, checkpoint envelope meaning, and diagnostic identities.
+Presenter adapters must return asynchronous method `ValueTask` values promptly;
+configured Flow timeouts cannot interrupt code that blocks synchronously before the
+return.
