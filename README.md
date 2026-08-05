@@ -37,6 +37,21 @@ Verification performs a restore, a warning-free Release build, the Flow
 contract suites, the CommunityToolkit adapter fixtures, and a NativeAOT publish
 and execution smoke test.
 
+## Prerelease packages
+
+Pull requests that affect packaging produce validated, non-published artifacts
+for `RunicFlow`, `RunicFlow.Generators`, and `RunicFlow.CommunityToolkit`. The
+package gate checks the exact artifact set, MIT and repository metadata, the
+declared dependency graph, an isolated package consumer, and NativeAOT.
+
+Publishing to GitHub Packages is deliberately separate: a maintainer must run
+the **Prerelease packages** workflow manually and explicitly enable its
+`publish` input. To reproduce the package stage locally:
+
+```bash
+./eng/pack.sh 0.1.0-preview.local.1 /tmp/runic-flow-packages
+```
+
 ## License
 
 Runic Flow is licensed under the [MIT License](LICENSE).
