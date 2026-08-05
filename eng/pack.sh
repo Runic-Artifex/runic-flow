@@ -23,6 +23,7 @@ package_projects=(
   "$repository_root/src/RunicFlow/RunicFlow.csproj"
   "$repository_root/src/RunicFlow.Generators/RunicFlow.Generators.csproj"
   "$repository_root/src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj"
+  "$repository_root/integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj"
 )
 
 for project in "${package_projects[@]}"; do

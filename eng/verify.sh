@@ -40,6 +40,11 @@ dotnet run \
   --configuration "$configuration" \
   --no-build
 
+dotnet run \
+  --project tests/RunicFlow.RunicToolkit.Tests/RunicFlow.RunicToolkit.Tests.csproj \
+  --configuration "$configuration" \
+  --no-build
+
 pwsh -NoProfile \
   -File tests/RunicFlow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1 \
   -Configuration "$configuration" \

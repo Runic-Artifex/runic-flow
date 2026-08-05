@@ -17,10 +17,10 @@ identities.
 | `RunicFlow` | UI-neutral navigation, dialogs, operations, workflows, and presentation contracts |
 | `RunicFlow.Generators` | Roslyn-independent generator and diagnostic contracts |
 | `RunicFlow.CommunityToolkit` | Flow-owned CommunityToolkit.Mvvm projection adapter |
-| `integrations/RunicFlow.RunicToolkit` | Staged Toolkit integration boundary owned by Flow |
+| `integrations/RunicFlow.RunicToolkit` | Published Toolkit desktop integration owned by Flow |
 
 The Toolkit adapter source is intentionally outside the standalone solution until
-Runic Toolkit contracts can be consumed as packages. This keeps dependency
+Runic Toolkit contracts are consumed as exact packages. This keeps dependency
 direction explicit: integrations depend on both products; neither core depends on
 an integration.
 

@@ -6,7 +6,9 @@ using RunicFlow.Dialogs;
 using RunicFlow;
 using RunicFlow.Navigation;
 using RunicFlow.Operations;
+using RunicFlow.RunicToolkit.Navigation;
 using RunicFlow.Workflows;
+using RunicToolkit.Desktop;
 
 namespace RunicFlow.AotSmoke;
 
@@ -38,6 +40,10 @@ internal static class Program
             .NavigateAsync<AotDetailsViewModel>(region)
             .ConfigureAwait(false);
         NavigationResult backed = await navigationService.BackAsync(region).ConfigureAwait(false);
+        var closeGuard = new NavigationDesktopCloseGuard(navigationService, [region]);
+        DesktopCloseDecision closeDecision = await closeGuard.CanCloseAsync(
+            new DesktopCloseRequest(DesktopCloseReason.HostShutdown),
+            CancellationToken.None).ConfigureAwait(false);
         await navigationService.ShutdownAsync().ConfigureAwait(false);
 
         StepKey step = new("aot.step");
@@ -106,6 +112,7 @@ internal static class Program
             && pushed.Snapshot.Entries.Count == 2
             && backed.Kind == NavigationResultKind.Navigated
             && backed.Snapshot.Current?.Route == route
+            && closeDecision.IsAllowed
             && navigationPresenter.PresentationCount >= 3
             && workflow.Start == step
             && workflow.Steps.Count == 1

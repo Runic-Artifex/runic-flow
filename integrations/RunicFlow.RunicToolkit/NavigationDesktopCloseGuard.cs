@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RunicToolkit.Desktop;
 using RunicFlow;
+using RunicFlow.Navigation;
 
 namespace RunicFlow.RunicToolkit.Navigation;
 

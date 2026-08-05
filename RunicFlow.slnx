@@ -4,9 +4,13 @@
     <Project Path="src/RunicFlow.Generators/RunicFlow.Generators.csproj" />
     <Project Path="src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj" />
   </Folder>
+  <Folder Name="/integrations/">
+    <Project Path="integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj" />
     <Project Path="tests/RunicFlow.CommunityToolkit.Tests/RunicFlow.CommunityToolkit.Tests.csproj" />
     <Project Path="tests/RunicFlow.Tests/RunicFlow.Tests.csproj" />
+    <Project Path="tests/RunicFlow.RunicToolkit.Tests/RunicFlow.RunicToolkit.Tests.csproj" />
   </Folder>
 </Solution>
