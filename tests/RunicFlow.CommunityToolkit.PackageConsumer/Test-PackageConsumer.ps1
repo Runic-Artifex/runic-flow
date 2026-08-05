@@ -1,7 +1,9 @@
 param(
     [string]$Configuration = "Release",
     [switch]$SkipNativeAot,
-    [string]$RuntimeIdentifier = [System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier
+    [string]$RuntimeIdentifier = [System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier,
+    [string]$PackageVersion = "0.0.0-local",
+    [string]$PackageDirectory
 )
 
 Set-StrictMode -Version Latest
@@ -98,6 +100,12 @@ try {
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot "Program.cs") -Destination $consumerDirectory
     Copy-Item -LiteralPath (Resolve-CachedPackage -Id "CommunityToolkit.Mvvm" -Version "8.4.2") -Destination $feed
 
+    if ($PackageDirectory) {
+        $resolvedPackageDirectory = (Resolve-Path -LiteralPath $PackageDirectory).Path
+        Copy-Item -LiteralPath (Join-Path $resolvedPackageDirectory "RunicFlow.$PackageVersion.nupkg") -Destination $feed
+        Copy-Item -LiteralPath (Join-Path $resolvedPackageDirectory "RunicFlow.CommunityToolkit.$PackageVersion.nupkg") -Destination $feed
+    }
+
     @"
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
@@ -120,38 +128,40 @@ try {
 </configuration>
 "@ | Set-Content -Encoding UTF8 $config
 
-    Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
-        "-p:ContinuousIntegrationBuild=true", "-p:RunicFlowBuildMode=Verification",
-        "-o", $feed, (Join-Path $root "src/RunicFlow/RunicFlow.csproj"))
-    Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=0.0.0-local",
-        "-p:ContinuousIntegrationBuild=true", "-p:RunicFlowBuildMode=Verification",
-        "-o", $feed, (Join-Path $root "src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj"))
+    if (-not $PackageDirectory) {
+        Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=$PackageVersion",
+            "-p:ContinuousIntegrationBuild=true", "-p:RunicFlowBuildMode=Verification",
+            "-o", $feed, (Join-Path $root "src/RunicFlow/RunicFlow.csproj"))
+        Invoke-DotNet @("pack", "-c", $Configuration, "--no-restore", "-p:PackageVersion=$PackageVersion",
+            "-p:ContinuousIntegrationBuild=true", "-p:RunicFlowBuildMode=Verification",
+            "-o", $feed, (Join-Path $root "src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj"))
+    }
 
-    $runtimePackage = Join-Path $feed "RunicFlow.0.0.0-local.nupkg"
-    $adapterPackage = Join-Path $feed "RunicFlow.CommunityToolkit.0.0.0-local.nupkg"
+    $runtimePackage = Join-Path $feed "RunicFlow.$PackageVersion.nupkg"
+    $adapterPackage = Join-Path $feed "RunicFlow.CommunityToolkit.$PackageVersion.nupkg"
     Assert-PackageDependencies -Path $runtimePackage -Expected @{}
     Assert-PackageDependencies -Path $adapterPackage -Expected @{
         "CommunityToolkit.Mvvm" = "[8.4.2]"
-        "RunicFlow" = "0.0.0-local"
+        "RunicFlow" = $PackageVersion
     }
 
     $env:NUGET_PACKAGES = $consumerCache
     Invoke-DotNet @("restore", $consumer, "-m:1", "--disable-parallel", "--configfile", $config,
         "--no-cache", "-p:NuGetAudit=false", "-p:RestorePackagesWithLockFile=false",
-        "-p:RunicFlowCommunityToolkitPackageVersion=0.0.0-local")
+        "-p:RunicFlowCommunityToolkitPackageVersion=$PackageVersion")
     Invoke-DotNet @("run", "-c", $Configuration, "--no-restore",
-        "-p:RunicFlowCommunityToolkitPackageVersion=0.0.0-local", "--project", $consumer)
+        "-p:RunicFlowCommunityToolkitPackageVersion=$PackageVersion", "--project", $consumer)
 
     if (-not $SkipNativeAot) {
         $publishDirectory = Join-Path $consumerDirectory "obj/aot-publish/$RuntimeIdentifier"
         Invoke-DotNet @("restore", $consumer, "--runtime", $RuntimeIdentifier, "--configfile", $config,
             "-m:1", "--disable-parallel", "-p:PublishAot=true", "-p:PublishTrimmed=true",
             "-p:TrimMode=full", "-p:NuGetAudit=false", "-p:RestorePackagesWithLockFile=false",
-            "-p:RunicFlowCommunityToolkitPackageVersion=0.0.0-local")
+            "-p:RunicFlowCommunityToolkitPackageVersion=$PackageVersion")
         Invoke-DotNet @("publish", $consumer, "-c", $Configuration, "--runtime", $RuntimeIdentifier,
             "--self-contained", "true", "--no-restore", "--output", $publishDirectory,
             "-p:PublishAot=true", "-p:PublishTrimmed=true", "-p:TrimMode=full",
-            "-p:IlcTreatWarningsAsErrors=true", "-p:RunicFlowCommunityToolkitPackageVersion=0.0.0-local")
+            "-p:IlcTreatWarningsAsErrors=true", "-p:RunicFlowCommunityToolkitPackageVersion=$PackageVersion")
 
         $nativeExecutableName = if ($RuntimeIdentifier.StartsWith('win-', [StringComparison]::OrdinalIgnoreCase)) {
             'RunicFlow.CommunityToolkit.PackageConsumer.exe'
