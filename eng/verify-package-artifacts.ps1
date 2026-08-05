@@ -15,6 +15,10 @@ $expectedPackages = [ordered]@{
         "CommunityToolkit.Mvvm" = "[8.4.2]"
         "RunicFlow" = $PackageVersion
     }
+    "RunicFlow.RunicToolkit" = @{
+        "RunicFlow" = $PackageVersion
+        "RunicToolkit.Desktop" = "[0.1.0-preview.4.1]"
+    }
 }
 
 function Read-Nuspec {

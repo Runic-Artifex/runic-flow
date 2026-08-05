@@ -26,6 +26,11 @@ for project in RunicFlow RunicFlow.Generators RunicFlow.CommunityToolkit; do
   grep -Fq "<PackageId>$project</PackageId>" "$project_file"
 done
 
+integration_project="integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj"
+grep -Fq '<AssemblyName>RunicFlow.RunicToolkit</AssemblyName>' "$integration_project"
+grep -Fq '<RootNamespace>RunicFlow.RunicToolkit</RootNamespace>' "$integration_project"
+grep -Fq '<PackageId>RunicFlow.RunicToolkit</PackageId>' "$integration_project"
+
 protocol_matches="$(grep -R -l -F --exclude-dir=bin --exclude-dir=obj \
   'runic.flow.communitytoolkit/1' src tests | wc -l)"
 if [[ "$protocol_matches" -lt 3 ]]; then
