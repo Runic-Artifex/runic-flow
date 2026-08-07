@@ -55,7 +55,7 @@ public sealed class NavigationOutletChangedEventArgs : EventArgs
 
 /// <summary>
 /// Presents Flow navigation into observable, frontend-neutral outlets. Generated
-/// cwhtml or TypeScript adapters can project these observations through CsWebUi.
+/// .NET or TypeScript adapters can project these observations through CsWebUi.
 /// </summary>
 public sealed class ObservableNavigationPresenter : INavigationRegionPresenter
 {
