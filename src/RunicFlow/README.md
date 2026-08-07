@@ -10,8 +10,8 @@ Public feature APIs remain in the flat namespaces `RunicFlow.Navigation`,
 `RunicFlow.Workflows`, and `RunicFlow`.
 
 `ObservableNavigationPresenter` publishes immutable logical-region outlets and
-`ObservableDialogPresenter` publishes the active typed-dialog stack for cwhtml
-or TypeScript presentation. Toolkit desktop lifetime mapping is owned by the
+`ObservableDialogPresenter` publishes the active typed-dialog stack for .NET or
+TypeScript presentation. Toolkit desktop lifetime mapping is owned by the
 separate `RunicFlow.RunicToolkit` integration boundary, so this core package has
 no UI-framework or Toolkit assembly dependency.
 
