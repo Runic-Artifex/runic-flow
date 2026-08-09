@@ -6,10 +6,13 @@
     <RootNamespace>RunicFlow.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../src/RunicFlow/RunicFlow.csproj" />
-    <ProjectReference Include="../../src/RunicFlow.Generators/RunicFlow.Generators.csproj" />
+    <Compile Include="Program.cs" />
+    <Compile Include="HeadlessFlowTests.cs" />
+    <Compile Include="ManualTimeProvider.cs" />
   </ItemGroup>
 </Project>

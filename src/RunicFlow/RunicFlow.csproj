@@ -5,17 +5,19 @@
     <RootNamespace>RunicFlow</RootNamespace>
     <PackageId>RunicFlow</PackageId>
     <Title>Runic Flow</Title>
-    <Description>Framework-neutral navigation, dialogs, operations, and workflow contracts for .NET applications.</Description>
+    <Description>Headless process orchestration and coordinated operation primitives for .NET applications.</Description>
     <Authors>RunicArtifex</Authors>
-    <PackageTags>runic;flow;navigation;dialogs;operations;workflow</PackageTags>
+    <PackageTags>runic;flow;process;operations;orchestration;nativeaot</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IsPackable>true</IsPackable>
     <RunicFlowShippingProject>true</RunicFlowShippingProject>
-    <!-- The frozen contract intentionally follows the standard result-type factory shape. -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <!-- Generic decision/outcome factories keep nullable result semantics explicit. -->
     <NoWarn>$(NoWarn);CA1000</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Core/**/*.cs" />
     <None Include="README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>

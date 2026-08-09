@@ -12,8 +12,7 @@ on:
       - src/**/*.csproj
       - integrations/**/*.csproj
       - integrations/**/README.md
-      - tests/RunicFlow.CommunityToolkit.PackageConsumer/**
-      - tests/RunicFlow.RunicToolkit.PackageConsumer/**
+      - tests/RunicFlow.ApplicationBridge.PackageConsumer/**
       - tests/RunicFlow.AotSmoke/**
   workflow_dispatch:
     inputs:
@@ -62,17 +61,9 @@ jobs:
       - name: Create and validate prerelease packages
         run: ./eng/pack.sh "$PACKAGE_VERSION" "$RUNNER_TEMP/packages"
 
-      - name: Consume packaged CommunityToolkit integration
-        shell: pwsh
+      - name: Consume packaged Application Bridge integration with NativeAOT
         run: >-
-          ./tests/RunicFlow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1
-          -Configuration Release
-          -PackageVersion "$env:PACKAGE_VERSION"
-          -PackageDirectory "$env:RUNNER_TEMP/packages"
-
-      - name: Consume packaged Runic Toolkit integration with NativeAOT
-        run: >-
-          bash tests/RunicFlow.RunicToolkit.PackageConsumer/Test-PackageConsumer.sh
+          bash tests/RunicFlow.ApplicationBridge.PackageConsumer/Test-PackageConsumer.sh
           "$PACKAGE_VERSION" "$RUNNER_TEMP/packages" linux-x64
 
       - name: Record package digests

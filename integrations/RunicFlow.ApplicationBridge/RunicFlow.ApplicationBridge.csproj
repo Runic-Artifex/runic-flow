@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(RunicFlowDefaultTargetFramework)</TargetFramework>
+    <AssemblyName>RunicFlow.ApplicationBridge</AssemblyName>
+    <RootNamespace>RunicFlow.ApplicationBridge</RootNamespace>
+    <PackageId>RunicFlow.ApplicationBridge</PackageId>
+    <Title>Runic Flow integration for Application Bridge</Title>
+    <Description>Binds headless Flow operations to Application Bridge operation ownership without duplicating protocol state.</Description>
+    <PackageTags>runic;flow;application-bridge;operations;orchestration</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+    <RunicFlowShippingProject>true</RunicFlowShippingProject>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RunicFlowUseLocalToolkit Condition="'$(RunicFlowUseLocalToolkit)' == '' and Exists('../../../runic-toolkit/src/RunicToolkit.ApplicationBridge/RunicToolkit.ApplicationBridge.csproj')">true</RunicFlowUseLocalToolkit>
+    <RunicFlowUseLocalToolkit Condition="'$(RunicFlowUseLocalToolkit)' == ''">false</RunicFlowUseLocalToolkit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/RunicFlow/RunicFlow.csproj" />
+    <ProjectReference
+      Include="../../../runic-toolkit/src/RunicToolkit.ApplicationBridge/RunicToolkit.ApplicationBridge.csproj"
+      Condition="'$(RunicFlowUseLocalToolkit)' == 'true'" />
+    <PackageReference
+      Include="RunicToolkit.ApplicationBridge"
+      Version="[0.1.0-preview.21.1]"
+      Condition="'$(RunicFlowUseLocalToolkit)' != 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

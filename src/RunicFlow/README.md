@@ -1,19 +1,16 @@
 # RunicFlow
 
-The frontend-neutral Flow foundation for .NET 10 provides validated logical
-keys, typed outcomes, content descriptors and presentation leases, lifecycle
-contracts, exact-once completion, deterministic clock helpers, and the
-content-session ownership kernel.
+`RunicFlow` supplies NativeAOT-compatible, presentation-free mechanics for .NET
+applications:
 
-Public feature APIs remain in the flat namespaces `RunicFlow.Navigation`,
-`RunicFlow.Dialogs`, `RunicFlow.Operations`,
-`RunicFlow.Workflows`, and `RunicFlow`.
+- typed process definitions and serialized command dispatch;
+- immutable authoritative snapshots and process-local stale-version guards;
+- explicit accept, reject, complete, and cancel decisions;
+- bounded, consumer-coded checkpoints without serializer discovery;
+- coordinated operations with slots, timeout, progress, cancellation, monitoring,
+  and typed outcomes.
 
-`ObservableNavigationPresenter` publishes immutable logical-region outlets and
-`ObservableDialogPresenter` publishes the active typed-dialog stack for .NET or
-TypeScript presentation. Toolkit desktop lifetime mapping is owned by the
-separate `RunicFlow.RunicToolkit` integration boundary, so this core package has
-no UI-framework or Toolkit assembly dependency.
-
-The project is licensed under the repository's MIT License. Package publication
-still requires independent identity and release-readiness review.
+The package does not contain navigation, dialogs, ViewModels, presenters,
+presentation leases, frontend state, transport, or framework lifecycle adapters.
+Applications keep their named domain contract and project process state into the
+Application Bridge or another delivery mechanism.
