@@ -36,19 +36,14 @@ dotnet run \
   --no-build
 
 dotnet run \
-  --project tests/RunicFlow.CommunityToolkit.Tests/RunicFlow.CommunityToolkit.Tests.csproj \
+  --project tests/RunicFlow.ApplicationBridge.Tests/RunicFlow.ApplicationBridge.Tests.csproj \
   --configuration "$configuration" \
   --no-build
 
 dotnet run \
-  --project tests/RunicFlow.RunicToolkit.Tests/RunicFlow.RunicToolkit.Tests.csproj \
+  --project tests/RunicFlow.PackageConsumer/RunicFlow.PackageConsumer.csproj \
   --configuration "$configuration" \
-  --no-build
-
-pwsh -NoProfile \
-  -File tests/RunicFlow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1 \
-  -Configuration "$configuration" \
-  -SkipNativeAot
+  --no-restore
 
 dotnet restore \
   tests/RunicFlow.AotSmoke/RunicFlow.AotSmoke.csproj \

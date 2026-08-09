@@ -30,7 +30,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageProjectUrl>https://github.com/Runic-Artifex/runic-flow</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags Condition="'$(PackageTags)' == ''">runic-artifex;flow;navigation;dotnet;nativeaot</PackageTags>
+    <PackageTags Condition="'$(PackageTags)' == ''">runic-artifex;flow;process;operations;dotnet;nativeaot</PackageTags>
     <!-- Libraries leave dependency resolution to their consuming applications. -->
     <NuGetAudit Condition="'$(RunicFlowVerificationBuild)' == 'true'">true</NuGetAudit>
     <NuGetAudit Condition="'$(NuGetAudit)' == ''">false</NuGetAudit>

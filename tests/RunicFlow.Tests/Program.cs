@@ -6,29 +6,26 @@ namespace RunicFlow.Tests;
 
 internal static class Program
 {
-    private static async Task<int> Main()
+    public static async Task<int> Main()
     {
-        IReadOnlyList<ContractTest> tests = ContractTestCatalog.All;
+        IReadOnlyList<(string Name, Func<ValueTask> Run)> tests = HeadlessFlowTests.All;
         int failures = 0;
-
-        foreach (ContractTest test in tests)
+        foreach ((string name, Func<ValueTask> run) in tests)
         {
             try
             {
-                await test.Run().ConfigureAwait(false);
-                Console.WriteLine($"PASS {test.Name}");
+                await run().ConfigureAwait(false);
+                Console.WriteLine($"PASS {name}");
             }
             catch (Exception exception)
             {
                 failures++;
-                Console.Error.WriteLine($"FAIL {test.Name}");
+                Console.Error.WriteLine($"FAIL {name}");
                 Console.Error.WriteLine(exception);
             }
         }
 
-        Console.WriteLine($"Executed {tests.Count} Flow contract tests; {failures} failed.");
+        Console.WriteLine($"Executed {tests.Count} headless Flow tests; {failures} failed.");
         return failures == 0 ? 0 : 1;
     }
 }
-
-internal sealed record ContractTest(string Name, Func<ValueTask> Run);

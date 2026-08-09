@@ -5,16 +5,11 @@ using System.Threading.Tasks;
 
 namespace RunicFlow.Tests;
 
-internal sealed class ManualTimeProvider : TimeProvider
+internal sealed class ManualTimeProvider(DateTimeOffset initialUtcNow) : TimeProvider
 {
     private readonly object _gate = new();
     private readonly List<ManualTimer> _timers = [];
-    private DateTimeOffset _utcNow;
-
-    public ManualTimeProvider(DateTimeOffset utcNow)
-    {
-        _utcNow = utcNow;
-    }
+    private DateTimeOffset _utcNow = initialUtcNow;
 
     public override DateTimeOffset GetUtcNow()
     {
@@ -31,7 +26,6 @@ internal sealed class ManualTimeProvider : TimeProvider
         TimeSpan period)
     {
         ArgumentNullException.ThrowIfNull(callback);
-
         var timer = new ManualTimer(this, callback, state);
         lock (_gate)
         {
@@ -45,7 +39,6 @@ internal sealed class ManualTimeProvider : TimeProvider
     public void Advance(TimeSpan duration)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
-
         List<(TimerCallback Callback, object? State)> callbacks = [];
         lock (_gate)
         {
@@ -70,39 +63,32 @@ internal sealed class ManualTimeProvider : TimeProvider
         }
     }
 
-    private sealed class ManualTimer : ITimer
+    private sealed class ManualTimer(
+        ManualTimeProvider provider,
+        TimerCallback callback,
+        object? state) : ITimer
     {
-        private readonly ManualTimeProvider _provider;
-        private readonly TimerCallback _callback;
-        private readonly object? _state;
         private DateTimeOffset? _next;
         private TimeSpan _period;
         private bool _disposed;
 
-        public ManualTimer(ManualTimeProvider provider, TimerCallback callback, object? state)
-        {
-            _provider = provider;
-            _callback = callback;
-            _state = state;
-        }
-
         public bool Change(TimeSpan dueTime, TimeSpan period)
         {
-            lock (_provider._gate)
+            lock (provider._gate)
             {
                 if (_disposed)
                 {
                     return false;
                 }
 
-                ChangeCore(dueTime, period, _provider._utcNow);
+                ChangeCore(dueTime, period, provider._utcNow);
                 return true;
             }
         }
 
         public void Dispose()
         {
-            lock (_provider._gate)
+            lock (provider._gate)
             {
                 if (_disposed)
                 {
@@ -111,7 +97,7 @@ internal sealed class ManualTimeProvider : TimeProvider
 
                 _disposed = true;
                 _next = null;
-                _provider.Remove(this);
+                provider.Remove(this);
             }
         }
 
@@ -123,8 +109,8 @@ internal sealed class ManualTimeProvider : TimeProvider
 
         internal void ChangeCore(TimeSpan dueTime, TimeSpan period, DateTimeOffset utcNow)
         {
-            ValidateTimerDuration(dueTime, nameof(dueTime), allowInfinite: true);
-            ValidateTimerDuration(period, nameof(period), allowInfinite: true);
+            Validate(dueTime, nameof(dueTime));
+            Validate(period, nameof(period));
             _period = period;
             _next = dueTime == Timeout.InfiniteTimeSpan ? null : utcNow + dueTime;
         }
@@ -138,16 +124,13 @@ internal sealed class ManualTimeProvider : TimeProvider
                 return;
             }
 
-            callbacks.Add((_callback, _state));
+            callbacks.Add((callback, state));
             _next = _period == Timeout.InfiniteTimeSpan ? null : utcNow + _period;
         }
 
-        private static void ValidateTimerDuration(
-            TimeSpan duration,
-            string parameterName,
-            bool allowInfinite)
+        private static void Validate(TimeSpan duration, string parameterName)
         {
-            if (duration < TimeSpan.Zero && (!allowInfinite || duration != Timeout.InfiniteTimeSpan))
+            if (duration < TimeSpan.Zero && duration != Timeout.InfiniteTimeSpan)
             {
                 throw new ArgumentOutOfRangeException(parameterName);
             }

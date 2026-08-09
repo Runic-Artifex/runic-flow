@@ -1,6 +1,6 @@
 # Flow packed-package consumer
 
-This executable compiles and runs public Flow scenarios without using internal APIs.
+This executable compiles and runs the public headless process, checkpoint, and operation scenarios without using internal APIs.
 The default build uses a `ProjectReference` for repository development. Setting
 `RunicFlowPackageVersion` switches the same source to a `PackageReference`, so this is
 also an executable packed-package gate:

@@ -4,38 +4,28 @@ set -euo pipefail
 repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repository_root"
 
-retired_content_pattern='WebUI[T]oolkit\.MVVM\.(Flow|Navigation|Dialogs|Operations|Workflows)|webui[t]oolkit\.mvvm\.flow|WUT[F]LOW'
-if git grep -n -E "$retired_content_pattern" -- .; then
-  echo "Retired Toolkit-owned Flow identities remain in tracked content." >&2
-  exit 1
-fi
-
 retired_paths="$(find . \( -path './.git' -o -name bin -o -name obj -o -name .packages \) \
   -prune -o -type f -print | sed 's#^\./##' | \
-  grep -E 'WebUI[T]oolkit\.MVVM\.Flow|webui[t]oolkit\.mvvm\.flow' || true)"
+  grep -E 'RunicFlow\.(CommunityToolkit|Generators|RunicToolkit)|WebUI[T]oolkit\.MVVM\.Flow' || true)"
 if [[ -n "$retired_paths" ]]; then
-  echo "Retired Toolkit-owned Flow identities remain in tracked paths:" >&2
+  echo "Retired Flow product paths remain:" >&2
   echo "$retired_paths" >&2
   exit 1
 fi
 
-for project in RunicFlow RunicFlow.Generators RunicFlow.CommunityToolkit; do
-  project_file="src/$project/$project.csproj"
-  grep -Fq "<AssemblyName>$project</AssemblyName>" "$project_file"
-  grep -Fq "<RootNamespace>$project</RootNamespace>" "$project_file"
-  grep -Fq "<PackageId>$project</PackageId>" "$project_file"
-done
+core_project="src/RunicFlow/RunicFlow.csproj"
+grep -Fq '<AssemblyName>RunicFlow</AssemblyName>' "$core_project"
+grep -Fq '<RootNamespace>RunicFlow</RootNamespace>' "$core_project"
+grep -Fq '<PackageId>RunicFlow</PackageId>' "$core_project"
 
-integration_project="integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj"
-grep -Fq '<AssemblyName>RunicFlow.RunicToolkit</AssemblyName>' "$integration_project"
-grep -Fq '<RootNamespace>RunicFlow.RunicToolkit</RootNamespace>' "$integration_project"
-grep -Fq '<PackageId>RunicFlow.RunicToolkit</PackageId>' "$integration_project"
+integration_project="integrations/RunicFlow.ApplicationBridge/RunicFlow.ApplicationBridge.csproj"
+grep -Fq '<AssemblyName>RunicFlow.ApplicationBridge</AssemblyName>' "$integration_project"
+grep -Fq '<RootNamespace>RunicFlow.ApplicationBridge</RootNamespace>' "$integration_project"
+grep -Fq '<PackageId>RunicFlow.ApplicationBridge</PackageId>' "$integration_project"
 
-protocol_matches="$(grep -R -l -F --exclude-dir=bin --exclude-dir=obj \
-  'runic.flow.communitytoolkit/1' src tests | wc -l)"
-if [[ "$protocol_matches" -lt 3 ]]; then
-  echo "Runic Flow CommunityToolkit protocol identity is not consistently represented." >&2
+if git grep -n -E 'namespace RunicFlow\.(Navigation|Dialogs|Workflows|Presentation|Registration)' -- '*.cs'; then
+  echo "Retired presentation-oriented namespaces remain in C# source." >&2
   exit 1
 fi
 
-echo "Runic Flow identity boundary verified."
+echo "Runic Flow headless identity boundary verified."

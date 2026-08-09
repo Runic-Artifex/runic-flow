@@ -16,14 +16,14 @@
       Include="../../src/RunicFlow/RunicFlow.csproj" />
     <ProjectReference
       Condition="'$(RunicFlowPackageVersion)' == ''"
-      Include="../../integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj" />
+      Include="../../integrations/RunicFlow.ApplicationBridge/RunicFlow.ApplicationBridge.csproj" />
     <PackageReference
       Condition="'$(RunicFlowPackageVersion)' != ''"
       Include="RunicFlow"
       Version="$(RunicFlowPackageVersion)" />
     <PackageReference
       Condition="'$(RunicFlowPackageVersion)' != ''"
-      Include="RunicFlow.RunicToolkit"
+      Include="RunicFlow.ApplicationBridge"
       Version="$(RunicFlowPackageVersion)" />
   </ItemGroup>
 </Project>

@@ -82,17 +82,9 @@ jobs:
       - name: Create packages
         run: ./eng/pack.sh "$PACKAGE_VERSION" "$RUNNER_TEMP/packages"
 
-      - name: Consume CommunityToolkit integration
-        shell: pwsh
+      - name: Consume Application Bridge integration with NativeAOT
         run: >-
-          ./tests/RunicFlow.CommunityToolkit.PackageConsumer/Test-PackageConsumer.ps1
-          -Configuration Release
-          -PackageVersion "$env:PACKAGE_VERSION"
-          -PackageDirectory "$env:RUNNER_TEMP/packages"
-
-      - name: Consume Runic Toolkit integration with NativeAOT
-        run: >-
-          bash tests/RunicFlow.RunicToolkit.PackageConsumer/Test-PackageConsumer.sh
+          bash tests/RunicFlow.ApplicationBridge.PackageConsumer/Test-PackageConsumer.sh
           "$PACKAGE_VERSION" "$RUNNER_TEMP/packages" linux-x64
 
       - name: Validate public package contract
@@ -102,7 +94,7 @@ jobs:
           artifact-directory: ${{ runner.temp }}/packages
           repository-url: https://github.com/Runic-Artifex/runic-flow
           repository-commit: ${{ github.sha }}
-          expected-nuget-count: "4"
+          expected-nuget-count: "2"
 
       - name: Record package digests
         working-directory: ${{ runner.temp }}/packages

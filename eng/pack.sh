@@ -21,9 +21,7 @@ mkdir -p "$output_directory"
 
 package_projects=(
   "$repository_root/src/RunicFlow/RunicFlow.csproj"
-  "$repository_root/src/RunicFlow.Generators/RunicFlow.Generators.csproj"
-  "$repository_root/src/RunicFlow.CommunityToolkit/RunicFlow.CommunityToolkit.csproj"
-  "$repository_root/integrations/RunicFlow.RunicToolkit/RunicFlow.RunicToolkit.csproj"
+  "$repository_root/integrations/RunicFlow.ApplicationBridge/RunicFlow.ApplicationBridge.csproj"
 )
 
 for project in "${package_projects[@]}"; do
@@ -32,6 +30,7 @@ for project in "${package_projects[@]}"; do
     -p:RepositoryCommit="$repository_commit" \
     -p:ContinuousIntegrationBuild=true \
     -p:RunicFlowBuildMode=Verification \
+    -p:RunicFlowUseLocalToolkit=false \
     --output "$output_directory"
 done
 
