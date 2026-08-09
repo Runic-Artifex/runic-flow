@@ -10,8 +10,6 @@
     <packageSource key="local-flow">
       <package pattern="RunicFlow" />
       <package pattern="RunicFlow.*" />
-      <!-- Permits an explicitly supplied local Toolkit package for offline reproduction. -->
-      <package pattern="RunicToolkit.ApplicationBridge" />
     </packageSource>
     <packageSource key="nuget.org">
       <package pattern="Microsoft.*" />
