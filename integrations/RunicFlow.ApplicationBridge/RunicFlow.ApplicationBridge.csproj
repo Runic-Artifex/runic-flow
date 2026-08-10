@@ -22,7 +22,7 @@
       Condition="'$(RunicFlowUseLocalToolkit)' == 'true'" />
     <PackageReference
       Include="RunicToolkit.ApplicationBridge"
-      Version="[0.1.0-preview.21.1]"
+      Version="[0.1.0-preview.22.1]"
       Condition="'$(RunicFlowUseLocalToolkit)' != 'true'" />
   </ItemGroup>
 
