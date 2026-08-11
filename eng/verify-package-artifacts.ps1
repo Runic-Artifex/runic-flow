@@ -12,7 +12,7 @@ $expectedPackages = [ordered]@{
     "RunicFlow" = @{}
     "RunicFlow.ApplicationBridge" = @{
         "RunicFlow" = $PackageVersion
-        "RunicToolkit.ApplicationBridge" = "[0.1.0-preview.27.1]"
+        "RunicToolkit.ApplicationBridge" = "[0.1.0-preview.30.1]"
     }
 }
 
